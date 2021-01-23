@@ -1,5 +1,6 @@
 import database from '../../loaders/database';
 import LoggerInstance from '../../loaders/logger';
+import { PapyrusObject } from '../Shared/customTypes';
 import { uploadFileToS3 } from '../Shared/Services/s3Service';
 
 export const uploadFileController = async (
@@ -12,10 +13,16 @@ export const uploadFileController = async (
 ) => {
   try {
     const uniquekey = await uploadFileToS3(filename, buffer, mimeType);
-    let { storageObject } = await (await database()).collection('userdata').findOne({ email: email });
-    if (storageObject === undefined) storageObject = {};
-    storageObject[title] = uniquekey;
-    if (Object.keys(storageObject).length === 1)
+    let { storageObject } = (await (await database()).collection('userdata').findOne({ email: email })) || {};
+    if (storageObject === undefined) storageObject = [];
+    const newPapyrusObject: PapyrusObject = {
+      title: title,
+      body: uniquekey,
+      type: 'file',
+      modified: Date.now(),
+    };
+    storageObject.push(newPapyrusObject);
+    if (storageObject.length === 1)
       await (await database()).collection('userdata').insertOne({ email: email, storageObject: storageObject });
     else
       await (await database())
