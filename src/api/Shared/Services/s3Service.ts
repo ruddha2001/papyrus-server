@@ -16,3 +16,7 @@ export const uploadFileToS3 = async (filename: string, buffer: Buffer, mimeType:
     .promise();
   return uniquekey;
 };
+
+export const getSignedUrlFromS3 = async (key: string) => {
+  return await s3.getSignedUrlPromise('getObject', { Bucket: bucketName, Key: key });
+};
