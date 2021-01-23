@@ -1,6 +1,6 @@
 import { S3 } from 'aws-sdk';
 import { customAlphabet } from 'nanoid';
-const s3 = new S3({ apiVersion: '2006-03-01' });
+const s3 = new S3({ apiVersion: '2006-03-01', signatureVersion: 'v4', region: process.env.AWS_REGION });
 const bucketName = process.env.S3_BUCKET_NAME || 'papyrusstoragedump';
 
 export const uploadFileToS3 = async (filename: string, buffer: Buffer, mimeType: string) => {
@@ -18,5 +18,5 @@ export const uploadFileToS3 = async (filename: string, buffer: Buffer, mimeType:
 };
 
 export const getSignedUrlFromS3 = async (key: string) => {
-  return await s3.getSignedUrlPromise('getObject', { Bucket: bucketName, Key: key });
+  return await s3.getSignedUrlPromise('getObject', { Bucket: bucketName, Key: key, Expires: 300 });
 };
