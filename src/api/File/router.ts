@@ -19,7 +19,7 @@ export const fileRouteHandler = () => {
 const uploadFileHandler = (req: Request, res: Response) => {
   const { originalname, buffer, mimetype, size } = req.file;
   try {
-    uploadFileController(originalname, buffer, mimetype, size);
+    uploadFileController(req.body.title, originalname, buffer, mimetype, size);
     res.json({ success: true, message: 'The file has been uploaded successfully' });
   } catch (error) {
     res.json({ status: false, message: error.message });
