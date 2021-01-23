@@ -16,10 +16,10 @@ export const fileRouteHandler = () => {
   return router;
 };
 
-const uploadFileHandler = (req: Request, res: Response) => {
+const uploadFileHandler = async (req: Request, res: Response) => {
   const { originalname, buffer, mimetype, size } = req.file;
   try {
-    uploadFileController(req.body.title, originalname, buffer, mimetype, size);
+    await uploadFileController(req.body.title, originalname, buffer, mimetype, size);
     res.json({ success: true, message: 'The file has been uploaded successfully' });
   } catch (error) {
     res.json({ status: false, message: error.message });
