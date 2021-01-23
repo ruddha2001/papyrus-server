@@ -1,1 +1,1 @@
-export const uploadFileToS3 = (filename: string, data: Buffer, mimeType: string) => {};
+export const uploadFileController = async (filename: string, buffer: Buffer, mimeType: string, size: number) => {};
