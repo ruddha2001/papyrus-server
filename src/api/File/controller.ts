@@ -1,7 +1,7 @@
 import database from '../../loaders/database';
 import LoggerInstance from '../../loaders/logger';
 import { PapyrusObject } from '../Shared/customTypes';
-import { uploadFileToS3 } from '../Shared/Services/s3Service';
+import { getSignedUrlFromS3, uploadFileToS3 } from '../Shared/Services/s3Service';
 
 export const uploadFileController = async (
   email: string,
@@ -28,6 +28,15 @@ export const uploadFileController = async (
       await (await database())
         .collection('userdata')
         .updateOne({ email: email }, { $set: { storageObject: storageObject } });
+  } catch (error) {
+    LoggerInstance.error(error);
+    throw error;
+  }
+};
+
+export const downloadFileController = async (key: string) => {
+  try {
+    return await getSignedUrlFromS3(key);
   } catch (error) {
     LoggerInstance.error(error);
     throw error;
