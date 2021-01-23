@@ -4,6 +4,7 @@ import express from 'express';
 import helmet from 'helmet';
 import config from '../config';
 import routes from '../api';
+import morgan from 'morgan';
 
 export default ({ app }: { app: express.Application }): void => {
   /**
@@ -31,6 +32,9 @@ export default ({ app }: { app: express.Application }): void => {
 
   // Enable Cross Origin Resource Sharing to all origins by default
   app.use(cors());
+
+  // Enable morgan to log all server responses
+  app.use(morgan('short'));
 
   // Middleware that transforms the raw string of req.body into json
   app.use(bodyParser.json());
