@@ -3,7 +3,7 @@ import { fetchVersion } from './controller';
 
 const router = Router();
 
-export const fileRouteHandler = () => {
+export const utilityRouteHandler = () => {
   router.get('/version', getVersionHandler);
   return router;
 };
