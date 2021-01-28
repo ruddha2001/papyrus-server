@@ -45,7 +45,7 @@ export const uploadFileController = async (
         .collection('userdata')
         .updateOne({ email: email }, { $set: { storageObject: storageObject } });
 
-    redis().set(uniquekey, await downloadFileController(uniquekey)); // Store the Signed URL in redis
+    redis().set(title, await downloadFileController(email, uniquekey)); // Store the Signed URL in redis
     return uniquekey;
   } catch (error) {
     LoggerInstance.error(error);
@@ -54,14 +54,18 @@ export const uploadFileController = async (
 };
 
 /**
- * Get signed URL for the key
- * @param {string} key The key to be downloaded
+ * Get signed URL for the title
+ * @param {string} email The email address of the logged in user
+ * @param {string} key The title of the file to be downloaded
  */
-export const downloadFileController = async (key: string) => {
+export const downloadFileController = async (email: string, title: string) => {
   try {
     // Check if Signed URL exists in the cache
-    if (await redisExistsPromise(key)) return await (<string>redisGetPromise(key));
-    return await getSignedUrlFromS3(key);
+    if (await redisExistsPromise(title)) return await (<string>redisGetPromise(title));
+    let { storageObject } = await (await database()).collection('userdata').findOne({ email: email });
+    let entry = storageObject.filter(object => object.title === title);
+    if (entry.length === 0) throw Error('Title was not found');
+    return await getSignedUrlFromS3(entry[0].body);
   } catch (error) {
     LoggerInstance.error(error);
     throw error;
