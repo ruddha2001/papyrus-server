@@ -1,11 +1,13 @@
 import { Router, Request, Response, NextFunction } from 'express';
 import LoggerInstance from '../loaders/logger';
 import { fileRouteHandler } from './File/router';
+import { utilityRouteHandler } from './Utility/router';
 
 export default (): Router => {
   const app = Router();
 
   app.use('/file', fileRouteHandler());
+  app.use('/utility', utilityRouteHandler());
   app.use(errorHandler);
 
   return app;
