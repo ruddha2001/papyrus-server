@@ -3,4 +3,5 @@ export type PapyrusObject = {
   body: string;
   type: 'file' | 'note';
   modified: number;
+  originalName: string;
 };

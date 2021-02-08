@@ -34,6 +34,7 @@ export const uploadFileController = async (
       body: uniquekey,
       type: 'file',
       modified: Date.now(),
+      originalName: filename,
     };
     storageObject.push(newPapyrusObject); // Add the new object
 
