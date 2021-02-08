@@ -46,7 +46,7 @@ export const uploadFileController = async (
         .collection('userdata')
         .updateOne({ email: email }, { $set: { storageObject: storageObject } });
 
-    redis().set(title, await downloadFileController(email, uniquekey)); // Store the Signed URL in redis
+    redis().set(title, await getSignedUrlFromS3(uniquekey)); // Store the Signed URL in redis
     return uniquekey;
   } catch (error) {
     LoggerInstance.error(error);
