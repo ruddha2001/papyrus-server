@@ -29,8 +29,8 @@ const uploadFileHandler = async (req: Request, res: Response) => {
 
 const downloadFileHandler = async (req: Request, res: Response) => {
   try {
-    const url = await downloadFileController('me@aniruddha.net', req.query.key as string);
-    res.json({ success: true, url: url });
+    const data = await downloadFileController('me@aniruddha.net', req.query.key as string);
+    res.json({ success: true, originalName: data.originalName, url: data.url });
   } catch (error) {
     res.json({ status: false, message: error.message });
   }
