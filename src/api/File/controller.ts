@@ -61,12 +61,15 @@ export const uploadFileController = async (
  */
 export const downloadFileController = async (email: string, title: string) => {
   try {
-    // Check if Signed URL exists in the cache
-    if (await redisExistsPromise(title)) return await (<string>redisGetPromise(title));
     let { storageObject } = await (await database()).collection('userdata').findOne({ email: email });
     let entry = storageObject.filter(object => object.title === title);
     if (entry.length === 0) throw Error('Title was not found');
-    return await getSignedUrlFromS3(entry[0].body);
+    return {
+      url: (await redisExistsPromise(title))
+        ? await (<string>redisGetPromise(title))
+        : await getSignedUrlFromS3(entry[0].body),
+      originalName: entry[0].originalName,
+    };
   } catch (error) {
     LoggerInstance.error(error);
     throw error;
