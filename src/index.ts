@@ -3,13 +3,14 @@ import express from 'express';
 import config from './config';
 import Loaders from './loaders';
 import Logger from './loaders/logger';
+import { socketServer } from './loaders/socket';
 
 async function startServer() {
   const app = express();
 
   await Loaders({ expressApp: app });
 
-  app
+  socketServer
     .listen(config.port, () => {
       Logger.info(`
       ################################################
